@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="zoz.cool.javis.mapper.UmsRoleResourceRelationMapper">
+
+    <resultMap id="BaseResultMap" type="zoz.cool.javis.domain.UmsRoleResourceRelation">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="roleId" column="role_id" jdbcType="BIGINT"/>
+            <result property="resourceId" column="resource_id" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,role_id,resource_id
+    </sql>
+    <insert id="insertBatch">
+        insert into ums_role_resource_relation(role_id,resource_id)
+        values
+        <foreach collection="umsRoleResourceRelationCollection" item="item" separator=",">
+            (#{item.roleId,jdbcType=NUMERIC},#{item.resourceId,jdbcType=NUMERIC})
+        </foreach>
+    </insert>
+</mapper>
