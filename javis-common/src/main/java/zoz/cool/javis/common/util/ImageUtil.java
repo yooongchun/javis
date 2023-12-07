@@ -8,8 +8,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ImageUtil {
     public static String img2base64(BufferedImage originalImage, float maxSize) throws IOException {
@@ -48,47 +46,6 @@ public class ImageUtil {
     public static BufferedImage base642Image(String base64_img_str) throws IOException {
         String base64String = base64_img_str.replaceFirst("^data:image/\\w+;base64,", "");
         byte[] imageBytes = Base64.getDecoder().decode(base64String);
-        BufferedImage img;
-        img = ImageIO.read(new ByteArrayInputStream(imageBytes));
-        ImageIO.write(img, "png", new File("yzm.png"));
-        return img;
+        return ImageIO.read(new ByteArrayInputStream(imageBytes));
     }
-
-    public static Map<String, BufferedImage> splitChannel(BufferedImage origin, int UPPER, int LOWER) {
-        BufferedImage imgRed = splitColor(origin, new Color(UPPER, LOWER, LOWER));
-        BufferedImage imgBlue = splitColor(origin, new Color(LOWER, LOWER, UPPER));
-        BufferedImage imgBlack = splitColor(origin, new Color(LOWER, LOWER, LOWER));
-        BufferedImage imgYellow = splitColor(origin, new Color(UPPER, UPPER, LOWER));
-
-        Map<String, BufferedImage> result = new HashMap<>();
-        result.put("ori", origin);
-        result.put("red", imgRed);
-        result.put("yellow", imgYellow);
-        result.put("blue", imgBlue);
-        result.put("black", imgBlack);
-        return null;
-    }
-
-    private BufferedImage splitColor(BufferedImage img, Color color) {
-        BufferedImage result = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
-        for (int x = 0; x < img.getWidth(); x++) {
-            for (int y = 0; y < img.getHeight(); y++) {
-                Color pixelColor = new Color(img.getRGB(x, y));
-                if (isSimilarColor(pixelColor, color)) {
-                    result.setRGB(x, y, pixelColor.getRGB());
-                } else {
-                    result.setRGB(x, y, Color.WHITE.getRGB());
-                }
-            }
-        }
-        return result;
-    }
-
-    private boolean isSimilarColor(Color color1, Color color2) {
-        return Math.abs(color1.getRed() - color2.getRed()) < LOWER &&
-                Math.abs(color1.getGreen() - color2.getGreen()) < LOWER &&
-                Math.abs(color1.getBlue() - color2.getBlue()) < LOWER;
-    }
-
-
 }

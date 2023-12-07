@@ -5,12 +5,9 @@ import zoz.cool.javis.common.util.ImageUtil;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Base64;
 
 public class BrowserClient {
     public static void main(String[] args) {
@@ -30,8 +27,9 @@ public class BrowserClient {
                 System.out.printf("request failed: %s\n", request.response().status());
             });
             String base64Img = getVerifyImg(page);
-            System.out.printf("yzm image: %s\n", base64Img);
-//            ImageUtil.base642Image(base64Img);
+            System.out.printf("yzm image: %s...\n", base64Img.substring(0, 100));
+            BufferedImage yzmImg = ImageUtil.base642Image(base64Img);
+            ImageIO.write(yzmImg, "png", Paths.get("yzm.png").toFile());
             Path path = Paths.get("example.png");
             System.out.println("Save to " + path.toAbsolutePath());
             page.screenshot(new Page.ScreenshotOptions().setPath(path));
@@ -40,6 +38,8 @@ public class BrowserClient {
                 Thread.sleep(10000);
             } catch (Exception ignored) {
             }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
